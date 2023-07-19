@@ -10,28 +10,33 @@ import { useCallback, useState } from 'react'
 import labels from './labels_index.json'
 
 export const useCharacterImageClassifier = () => {
-	const [isLoading, setIsLoading] = useState(false)
-	const predict = useCallback(async (image: HTMLImageElement) => {
-		setIsLoading(true)
-		const model = new cvstfjs.ClassificationModel()
-		await model.loadModelAsync(
-			'/models/yoruba-character-recognition/model.json'
-		)
+  const [isLoading, setIsLoading] = useState(false)
+  const predict = useCallback(async (image: HTMLImageElement) => {
+    setIsLoading(true)
+    const model = new cvstfjs.ClassificationModel()
+    await model.loadModelAsync(
+      '/models/yoruba-character-recognition/model.json'
+    )
 
-		const [result]: number[][] = await model.executeAsync(image)
+    const [result]: number[][] = await model.executeAsync(image)
 
-		let highestIndex = 0
-		for (let i = 0; i < result.length; i++) {
-			if (result[i] > result[highestIndex]) {
-				highestIndex = i
-			}
-		}
+    let highestIndex = 0
+    for (let i = 0; i < result.length; i++) {
+      if (result[i] > result[highestIndex]) {
+        highestIndex = i
+      }
+    }
 
-		setIsLoading(false)
-		model.dispose()
+    setIsLoading(false)
+    model.dispose()
 
-		return labels[highestIndex as unknown as keyof typeof labels]
-	}, [])
+    const label = labels[highestIndex as unknown as keyof typeof labels]
+    const accuracy = result[highestIndex] * 100
 
-	return { isLoading, predict }
+    console.log({ highestIndex })
+
+    return { label, accuracy }
+  }, [])
+
+  return { isLoading, predict }
 }
