@@ -20,8 +20,6 @@ export const useCharacterImageClassifier = () => {
 
 		const [result]: number[][] = await model.executeAsync(image)
 
-		console.log({ result })
-
 		let highestIndex = 0
 		for (let i = 0; i < result.length; i++) {
 			if (result[i] > result[highestIndex]) {
@@ -29,10 +27,9 @@ export const useCharacterImageClassifier = () => {
 			}
 		}
 
-		console.log({ highestIndex })
-
 		setIsLoading(false)
 		model.dispose()
+
 		return labels[highestIndex as unknown as keyof typeof labels]
 	}, [])
 
