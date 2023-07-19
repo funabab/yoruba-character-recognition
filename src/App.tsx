@@ -61,7 +61,11 @@ const App: React.FC<Props> = () => {
       )}
     >
       <input type="hidden" className="hidden" {...getInputProps()} />
-      {!prediction && <strong>Drag Image here or Click to Upload</strong>}
+      {!prediction && (
+        <strong className="text-sm text-center md:text-base">
+          Drag Image here or Click to Upload
+        </strong>
+      )}
 
       {uploadImageUrl && <img src={uploadImageUrl} className="h-40" />}
 
